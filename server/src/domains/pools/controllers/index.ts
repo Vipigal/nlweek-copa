@@ -9,7 +9,7 @@ const router = Router();
 
 router.get('/count',async(req: Request, res: Response)=>{
 	const count = await prisma.pool.count();
-	res.sendStatus(201).json(count);
+	res.status(201).json(count);
 });
 
 
