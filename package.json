@@ -1,0 +1,32 @@
+{
+  "name": "nlw",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx server/server.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vipigal/nlweek-copa.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Vipigal/nlweek-copa/issues"
+  },
+  "homepage": "https://github.com/Vipigal/nlweek-copa#readme",
+  "devDependencies": {
+    "@types/express": "^4.17.14",
+    "prisma": "^4.5.0",
+    "tsx": "^3.11.0",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.5.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  }
+}
