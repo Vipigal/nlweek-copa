@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 // generator erd {
@@ -10,13 +10,75 @@ generator client {
 // }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
 }
 
+//Bolao
 model Pool {
-	id String @id @default(uuid())
-	title String
-	code String @unique
+    id        String   @id @default(uuid())
+    title     String
+    code      String   @unique //codigo de 6 digitos
+    createdAt DateTime @default(now())
+
+	ownerId String?
+
+	//relacionamento 1:N entre bolao e Usuario - Cada bolao tem um dono
+	owner User? @relation(fields: [ownerId], references: [id])
+
+	participants Participant[]
+}
+
+//tabela pivo para o relacionamento N:M de Pool e User
+model Participant {
+    id String @id @default(uuid())
+
+    //possui uma chave para usuario e uma para bolao, configurando uma relacao
+	userId String 
+	poolId String
+
+	//relacao 1:N de Participante e Chutes
+	guesses Guess[]
+	
+	//relacao N:M entre Usuario e Bolao
+	user User @relation(fields: [userId], references: [id])
+	pool Pool @relation(fields: [poolId], references: [id])
+
+	@@unique([userId, poolId])
+}
+
+model User {
+    id        String   @id @default(uuid())
+    name      String
+    email     String   @unique
+    avatarUrl String? 
+    createdAt DateTime @default(now())
+
+	//relacionamento 1:N entre usuario e Bolao, cada usuario pode ter multiplos boloes
+	ownedPools Pool[]
+	//relacionamento N:M entre usuario e bolao (utilizando tabela de relacionamento "participant")
+	participatingAt Participant[]
+}
+
+model Game {
+    id String @id @default(uuid())
+	date DateTime
+
+	firstTeamCountryCode String
+	secondTeamCountryCode String
+
+	guesses Guess[]
+}
+
+model Guess {
+    id String @id @default(uuid())
+	firstTeamScore Int
+	secondTeamScore Int
 	createdAt DateTime @default(now())
+
+	gameId String
+	participantId String
+
+	game Game @relation(fields: [gameId], references: [id]) //relacao 1:N de Chute e Jogo - Cada chute eh de um jogo e cada jogo tem varios chutes
+	participant Participant @relation(fields: [participantId], references: [id]) //relacao 1:N de Chute e participante - Cada chute vem de um participante e cada participante pode ter varios chutes
 }

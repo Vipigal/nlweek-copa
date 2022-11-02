@@ -18,4 +18,10 @@ app.use(express.urlencoded({
 const poolRouter = require('../src/domains/pools/controllers/index');
 app.use('/pools',poolRouter);
 
+const userRouter = require('../src/domains/users/controllers/index');
+app.use('/users',userRouter);
+
+const guessRouter = require('../src/domains/guesses/controllers/index');
+app.use('/guesses',guessRouter);
+
 export default app;
