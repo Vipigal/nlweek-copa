@@ -27,8 +27,8 @@ router.post('/',async(req: Request, res: Response)=>{
 
 		await prisma.pool.create({
 			data:{
-				title: title,
-				code: code
+				title,
+				code,
 			}
 		})
 		res.status(201).json(code);
