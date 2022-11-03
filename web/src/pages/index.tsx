@@ -1,15 +1,17 @@
-// interface homeProps{
-// 	count: number;
-// }
-
 import Image from "next/image"
 import logoImg from '../assets/logo.svg'
 import avatarImg from '../assets/users-avatar-example.png'
 import iconCheckImg from '../assets/icon-check.svg'
 import previewAppImg from '../assets/app-nlw-copa-preview.png'
+import {api} from "../../lib/axios"
 
+interface homeProps{
+	poolCount: number,
+	userCount: number,
+	guessCount: number,
+}
 
-export default function Home() {
+export default function Home(props: homeProps) {
   return (
 		<div className="max-w-[1124px] h-screen mx-auto grid grid-cols-2 gap-28 items-center">
 			<main>
@@ -19,7 +21,7 @@ export default function Home() {
 				<div className="mt-10 flex items-center gap-2">
 					<Image src={avatarImg} alt="Preview de avatares de usuarios do bolão"/>
 					<strong className="text-gray-100 text-xl">
-						<span className="text-ignite-500">+12.000</span> Pessoas ja estão utilizando!
+						<span className="text-ignite-500">+{props.userCount}</span> Pessoas ja estão utilizando!
 					</strong>
 				</div>
 
@@ -37,7 +39,7 @@ export default function Home() {
 						<Image src={iconCheckImg} alt='Icon de check'/>
 						<div className="flex flex-col">
 							<span className="font-bold text-2xl">
-								+2.034
+								+{props.poolCount}
 							</span>
 							<span>
 								Bolões criados
@@ -52,7 +54,7 @@ export default function Home() {
 						<Image src={iconCheckImg} alt='Icon de check'/>
 						<div className="flex flex-col">
 							<span className="font-bold text-2xl">
-								+192.846
+								+{props.guessCount}
 							</span>
 							<span>
 								Palpites enviados
@@ -72,14 +74,20 @@ export default function Home() {
 }
 
 
-// export const getServerSideProps = async ()=>{
-// 	const response = await fetch('http://localhost:3030/users/count');
-// 	const data = await response.json();
+export const getServerSideProps = async ()=>{
 
-// 	return {
-// 		props: {
-// 			count: data,
-// 		}
-// 	}
+	const [poolCountResponse, guessCountResponse, userCountResponse] = await Promise.all([
+		api.get('pools/count'),
+		api.get('guesses/count'),
+		api.get('users/count')
+	])
+	
+	return {
+		props: {
+			poolCount: poolCountResponse.data,
+			guessCount: guessCountResponse.data,
+			userCount: userCountResponse.data,
+		}
+	}
 
-// }
+}
